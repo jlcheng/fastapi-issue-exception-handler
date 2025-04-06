@@ -1,0 +1,50 @@
+[project]
+name = "jcft"
+version = "0.1.0"
+description = "A simple FastAPI project"
+authors = [
+    { name = "John Cheng", email = "johnlicheng@gmail.com" }
+]
+requires-python = ">=3.13.1"
+dependencies = [
+    "fastapi[standard]>=0.115.12",
+    "pydantic>=2.10.6",
+]
+
+[tool.ruff]
+line-length = 110
+indent-width = 4
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["F","E","W","RUF","FURB","ASYNC","B","A","C4","DTZ","INT","I","PT","RET"]
+ignore = ["B008"]
+fixable = ["ALL"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "pytest>=8.3.5",
+    "respx>=0.22.0",
+]
+tests = []
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "src/main.py",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build" 

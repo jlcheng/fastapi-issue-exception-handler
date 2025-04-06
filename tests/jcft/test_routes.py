@@ -3,6 +3,7 @@ from typing import AsyncGenerator
 import pytest
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
+from starlette.middleware.cors import CORSMiddleware
 
 from jcft.main_app import app as _app
 
@@ -23,7 +24,13 @@ def app() -> FastAPI:
 async def async_client(app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
     """Provides an AsyncClient configured for the test app."""
     base_url = "https://example.com"
-    async with AsyncClient(transport=ASGITransport(app=app), base_url=base_url) as client:
+    # See https://github.com/fastapi/fastapi/discussions/8027
+    wrapped_app = CORSMiddleware(
+        app,
+        allow_origins=["https://example.com"],
+        allow_credentials=True
+    )
+    async with AsyncClient(transport=ASGITransport(app=wrapped_app), base_url=base_url) as client:
         client.headers["origin"] = base_url
 
         yield client
